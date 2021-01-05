@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using RestSharp;
 
@@ -17,8 +18,7 @@ namespace ServicioRecurrenteV2.Metodos
             try
             {
                 ST1_ObtenerCookies(url);
-                ST2_IniciarSesion(url);
-                return oResultado.Exitoso();
+                return oResultado.Exitoso(ST2_IniciarSesion(url));
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace ServicioRecurrenteV2.Metodos
             RequestVerificationTokenBody = response.Content.Substring(comienza + 61, 108);
         }
 
-        public void ST2_IniciarSesion(string url)
+        public Dictionary<string, string> ST2_IniciarSesion(string url)
         {
             var client = new RestClient($"{url}/Account/Login?ReturnUrl=%2F");
             client.Timeout = -1;
@@ -50,15 +50,23 @@ namespace ServicioRecurrenteV2.Metodos
             request.AddParameter("ASP.NET_SessionId", SessionId, ParameterType.Cookie);
             request.AddParameter("__RequestVerificationToken", RequestVerificationTokenCookie, ParameterType.Cookie);
             request.AddParameter("__RequestVerificationToken", RequestVerificationTokenBody);
-            request.AddParameter("Email", "admin@admin.comm");
-            request.AddParameter("Password", "123456");
+            request.AddParameter("Email", "ljchuello@gmail.com");
+            request.AddParameter("Password", "ljchuello@gmail.com");
             client.CookieContainer = new CookieContainer();
             IRestResponse response = client.Execute(request);
-            var cookie = client.CookieContainer.GetCookieHeader(new Uri($"{url}"));
+            string cookie = client.CookieContainer.GetCookieHeader(new Uri($"{url}"));
+
             if (!response.Content.Contains("<title>Perfil de empresa | Sistema de Facturación Electrónica</title>"))
             {
                 throw new Exception("Inicio de sesión incompleto");
             }
+
+            Dictionary<string, string> galletas = new Dictionary<string, string>();
+            galletas.Add(".AspNet.ApplicationCookie", cookie.Substring(26, 534));
+            galletas.Add("ASP.NET_SessionId", SessionId);
+            galletas.Add("__RequestVerificationToken", RequestVerificationTokenCookie);
+
+            return galletas;
         }
     }
 }

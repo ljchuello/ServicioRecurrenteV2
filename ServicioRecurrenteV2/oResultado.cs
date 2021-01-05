@@ -25,14 +25,6 @@ namespace ServicioRecurrenteV2
             return oResultado;
         }
 
-        public oResultado Fallido()
-        {
-            oResultado oResultado = new oResultado();
-            oResultado.Success = false;
-            oResultado.Mensaje = string.Empty;
-            return oResultado;
-        }
-
         public oResultado Fallido(string msj)
         {
             oResultado oResultado = new oResultado();

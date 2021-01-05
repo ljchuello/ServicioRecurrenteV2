@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metodos\Email.cs" />
     <Compile Include="Metodos\InicioSesion.cs" />
     <Compile Include="oResultado.cs" />
     <Compile Include="Program.cs" />
