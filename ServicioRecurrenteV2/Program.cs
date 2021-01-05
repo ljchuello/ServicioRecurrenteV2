@@ -1,4 +1,7 @@
-﻿using ServicioRecurrenteV2.Metodos;
+﻿//using System;
+
+using System;
+using ServicioRecurrenteV2.Metodos;
 
 namespace ServicioRecurrenteV2
 {
@@ -7,8 +10,9 @@ namespace ServicioRecurrenteV2
         static void Main(string[] args)
         {
             InicioSesion inicioSesion = new InicioSesion();
-            inicioSesion.ST1_ObtenerCookies("http://local.sermatick.com:8080");
-            inicioSesion.ST2_IniciarSesion();
+            var a = inicioSesion.GetToken("http://local.sermatick.com:8080");
+
+            Console.ReadLine();
         }
     }
 }
