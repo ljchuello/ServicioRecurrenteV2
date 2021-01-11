@@ -1,7 +1,6 @@
 ﻿//using System;
 
 using System;
-using System.Diagnostics;
 using ServicioRecurrenteV2.Metodos;
 
 namespace ServicioRecurrenteV2
