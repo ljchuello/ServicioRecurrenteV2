@@ -66,6 +66,7 @@
     <Compile Include="Libreria\Cadena.cs" />
     <Compile Include="Libreria\InicioSesion.cs" />
     <Compile Include="Libreria\oResultado.cs" />
+    <Compile Include="Libreria\Servicios.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
