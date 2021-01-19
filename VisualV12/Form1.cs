@@ -7,6 +7,8 @@ namespace VisualV12
 {
     public partial class Form1 : MetroForm
     {
+        private InicioSesion _inicioSesion = new InicioSesion();
+
         public Form1()
         {
             InitializeComponent();
@@ -18,6 +20,8 @@ namespace VisualV12
         {
             try
             {
+                #region Campos vacios
+
                 // validamos que haya ingresado una direccion web
                 if (Cadena.Vacia(txtUrl.Text))
                 {
@@ -44,6 +48,15 @@ namespace VisualV12
                 {
                     MessageBox.Show("Debe ingresar la instancia de SQL");
                     return;
+                }
+
+                #endregion
+
+                // Validamos el inicio de sesión
+                var a = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+                if (a.Success == false)
+                {
+                    MessageBox.Show($"No se ha iniciado sesión; {a.Mensaje}");
                 }
             }
             catch (Exception ex)
