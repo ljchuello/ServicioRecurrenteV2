@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using MetroFramework.Forms;
+using Visual;
 using VisualV12.Libreria;
 
 namespace VisualV12
@@ -10,6 +11,7 @@ namespace VisualV12
         private Servicios servicios = new Servicios();
         private InicioSesion _inicioSesion = new InicioSesion();
         private Configuracion configuracion = new Configuracion();
+        private OdbcSql _odbcSql = new OdbcSql();
 
         public Form1()
         {
@@ -20,6 +22,8 @@ namespace VisualV12
             txtUsuario.Text = configuracion.Usuario;
             txtContrasenia.Text = configuracion.Contrasenia;
             txtSqlServer.Text = configuracion.SqlIntancia;
+
+            var a = _odbcSql.Select_Top25_NoMail();
         }
 
         #region Guardar
