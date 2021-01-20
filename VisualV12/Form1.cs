@@ -7,7 +7,9 @@ namespace VisualV12
 {
     public partial class Form1 : MetroForm
     {
+        private Servicios servicios = new Servicios();
         private InicioSesion _inicioSesion = new InicioSesion();
+        private Configuracion configuracion = new Configuracion();
 
         public Form1()
         {
@@ -57,7 +59,30 @@ namespace VisualV12
                 if (a.Success == false)
                 {
                     MessageBox.Show($"No se ha iniciado sesión; {a.Mensaje}");
+                    return;
                 }
+
+                // Validamos si existe el servicio
+                if (servicios.ExisteServ(txtSqlServer.Text) == false)
+                {
+                    MessageBox.Show($"No se encuentra el servicio {txtSqlServer.Text}");
+                    return;
+                }
+
+                // Guardamos la configuración
+                configuracion = new Configuracion();
+                configuracion.Url = txtUrl.Text;
+                configuracion.Usuario = txtUsuario.Text;
+                configuracion.Contrasenia = txtContrasenia.Text;
+                configuracion.SqlIntancia = txtSqlServer.Text;
+                if (!configuracion.Guardar(configuracion))
+                {
+                    MessageBox.Show("No se ha podido guardar la configuración");
+                    return;
+                }
+
+                // Libre de pecados
+                MessageBox.Show("Se ha guardado la configuración");
             }
             catch (Exception ex)
             {

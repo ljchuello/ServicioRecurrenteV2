@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ServiceProcess;
 
 namespace VisualV12.Libreria
 {
@@ -12,7 +11,9 @@ namespace VisualV12.Libreria
         {
             try
             {
-                ServiceController[] services = ServiceController.GetServices();
+                List<ServiceController> services = ServiceController.GetServices().ToList();
+                int cant = services.Count(x => x.ServiceName.ToLower() == servicio.ToLower());
+                return cant == 1;
             }
             catch (Exception)
             {
