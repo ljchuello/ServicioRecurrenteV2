@@ -7,9 +7,9 @@ namespace VisualV12.Libreria
     public class Configuracion
     {
         public string Url { set; get; } = "http://localhost/";
-        public string Usuario { set; get; } = "sa";
+        public string Usuario { set; get; } = "admin@admin.com";
         public string Contrasenia { set; get; } = "123456";
-        public string SqlIntancia { set; get; } = "http://localhost/";
+        public string SqlIntancia { set; get; } = "MSSQL$SQLEXPRESS";
 
         public string ruta = @"C:\Sermatick\";
 
@@ -48,13 +48,13 @@ namespace VisualV12.Libreria
                 string json = string.Empty;
 
                 // Valiudamos si existe el archivo
-                if (!File.Exists("C:\\Sermatick\\v12.json"))
+                if (File.Exists("C:\\Sermatick\\v12.json"))
                 {
                     // Leemos
                     json = File.ReadAllText("C:\\Sermatick\\v12.json");
                 }
 
-                configuracion = JsonConvert.DeserializeObject<Configuracion>("C:\\Sermatick\\v12.json") ?? new Configuracion();
+                configuracion = JsonConvert.DeserializeObject<Configuracion>(json) ?? new Configuracion();
             }
             catch (Exception ex)
             {

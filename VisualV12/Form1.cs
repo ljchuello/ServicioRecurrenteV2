@@ -14,6 +14,12 @@ namespace VisualV12
         public Form1()
         {
             InitializeComponent();
+            configuracion = configuracion.Leer();
+
+            txtUrl.Text = configuracion.Url;
+            txtUsuario.Text = configuracion.Usuario;
+            txtContrasenia.Text = configuracion.Contrasenia;
+            txtSqlServer.Text = configuracion.SqlIntancia;
         }
 
         #region Guardar
