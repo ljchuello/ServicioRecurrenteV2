@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Odbc;
 
-namespace Visual
+namespace VisualV12.Libreria
 {
     public class OdbcSql
     {
@@ -14,6 +14,34 @@ namespace Visual
         {
             _dbConnection = new OdbcConnection(ConnectionString);
             _dbCommand = _dbConnection.CreateCommand();
+        }
+
+        public List<string> Select_Top25_NoAutorizado()
+        {
+            List<string> source = new List<string>();
+
+            try
+            {
+                _dbConnection.Open();
+                _dbCommand.CommandText = "SELECT db.id FROM dbo.DocumentosBase db" +
+                                         "\nWHERE db.estadoId IN(11, 12, 14, 15, 18)" +
+                                         "\nORDER BY db.fechaEmision";
+                OdbcDataReader dbReader = _dbCommand.ExecuteReader();
+                while (dbReader.Read())
+                {
+                    source.Add($"{dbReader["id"]}");
+                }
+                dbReader.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            _dbConnection.Dispose();
+            _dbCommand.Dispose();
+
+            return source;
         }
 
         public List<string> Select_Top25_NoMail()
