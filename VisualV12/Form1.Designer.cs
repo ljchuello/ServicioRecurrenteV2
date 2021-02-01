@@ -31,6 +31,13 @@ namespace VisualV12
         {
             this.Resumen = new MetroFramework.Controls.MetroTabControl();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblResumen = new MetroFramework.Controls.MetroLabel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblMailSinEnviar = new MetroFramework.Controls.MetroLabel();
+            this.txtFechaInicio = new MetroFramework.Controls.MetroLabel();
+            this.lblEstado = new MetroFramework.Controls.MetroLabel();
+            this.btnEstado = new MetroFramework.Controls.MetroButton();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
             this.btnRestaurar = new MetroFramework.Controls.MetroButton();
             this.btnGuardar = new MetroFramework.Controls.MetroButton();
@@ -42,10 +49,11 @@ namespace VisualV12
             this.txtUsuario = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
-            this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
-            this.btnEstado = new MetroFramework.Controls.MetroButton();
+            this.btnCerrar = new MetroFramework.Controls.MetroButton();
             this.Resumen.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +61,6 @@ namespace VisualV12
             // 
             this.Resumen.Controls.Add(this.metroTabPage1);
             this.Resumen.Controls.Add(this.metroTabPage2);
-            this.Resumen.Controls.Add(this.metroTabPage3);
             this.Resumen.Location = new System.Drawing.Point(10, 64);
             this.Resumen.Name = "Resumen";
             this.Resumen.SelectedIndex = 0;
@@ -63,7 +70,8 @@ namespace VisualV12
             // 
             // metroTabPage1
             // 
-            this.metroTabPage1.Controls.Add(this.btnEstado);
+            this.metroTabPage1.Controls.Add(this.groupBox2);
+            this.metroTabPage1.Controls.Add(this.groupBox1);
             this.metroTabPage1.HorizontalScrollbarBarColor = true;
             this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.HorizontalScrollbarSize = 10;
@@ -75,6 +83,76 @@ namespace VisualV12
             this.metroTabPage1.VerticalScrollbarBarColor = true;
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox2.Controls.Add(this.lblResumen);
+            this.groupBox2.Location = new System.Drawing.Point(0, 113);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(311, 190);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Resumen";
+            // 
+            // lblResumen
+            // 
+            this.lblResumen.AutoSize = true;
+            this.lblResumen.Location = new System.Drawing.Point(10, 20);
+            this.lblResumen.Name = "lblResumen";
+            this.lblResumen.Size = new System.Drawing.Size(0, 0);
+            this.lblResumen.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.Controls.Add(this.lblMailSinEnviar);
+            this.groupBox1.Controls.Add(this.txtFechaInicio);
+            this.groupBox1.Controls.Add(this.lblEstado);
+            this.groupBox1.Controls.Add(this.btnEstado);
+            this.groupBox1.Location = new System.Drawing.Point(1, 4);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(310, 107);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Servicio";
+            // 
+            // lblMailSinEnviar
+            // 
+            this.lblMailSinEnviar.AutoSize = true;
+            this.lblMailSinEnviar.Location = new System.Drawing.Point(9, 84);
+            this.lblMailSinEnviar.Name = "lblMailSinEnviar";
+            this.lblMailSinEnviar.Size = new System.Drawing.Size(108, 19);
+            this.lblMailSinEnviar.TabIndex = 6;
+            this.lblMailSinEnviar.Text = "Emails sin enviar:";
+            // 
+            // txtFechaInicio
+            // 
+            this.txtFechaInicio.AutoSize = true;
+            this.txtFechaInicio.Location = new System.Drawing.Point(9, 65);
+            this.txtFechaInicio.Name = "txtFechaInicio";
+            this.txtFechaInicio.Size = new System.Drawing.Size(80, 19);
+            this.txtFechaInicio.TabIndex = 5;
+            this.txtFechaInicio.Text = "Fecha inicio:";
+            // 
+            // lblEstado
+            // 
+            this.lblEstado.AutoSize = true;
+            this.lblEstado.Location = new System.Drawing.Point(9, 47);
+            this.lblEstado.Name = "lblEstado";
+            this.lblEstado.Size = new System.Drawing.Size(51, 19);
+            this.lblEstado.TabIndex = 3;
+            this.lblEstado.Text = "Estado:";
+            // 
+            // btnEstado
+            // 
+            this.btnEstado.Location = new System.Drawing.Point(6, 17);
+            this.btnEstado.Name = "btnEstado";
+            this.btnEstado.Size = new System.Drawing.Size(298, 23);
+            this.btnEstado.TabIndex = 2;
+            this.btnEstado.Text = "XxXx";
+            this.btnEstado.UseSelectable = true;
+            this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
             // 
             // metroTabPage2
             // 
@@ -186,7 +264,7 @@ namespace VisualV12
             this.txtContrasenia.Location = new System.Drawing.Point(7, 143);
             this.txtContrasenia.MaxLength = 32767;
             this.txtContrasenia.Name = "txtContrasenia";
-            this.txtContrasenia.PasswordChar = '\0';
+            this.txtContrasenia.PasswordChar = '*';
             this.txtContrasenia.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.txtContrasenia.SelectedText = "";
             this.txtContrasenia.SelectionLength = 0;
@@ -276,40 +354,31 @@ namespace VisualV12
             this.txtUrl.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.txtUrl.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
-            // metroTabPage3
+            // btnCerrar
             // 
-            this.metroTabPage3.HorizontalScrollbarBarColor = true;
-            this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.HorizontalScrollbarSize = 10;
-            this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage3.Name = "metroTabPage3";
-            this.metroTabPage3.Size = new System.Drawing.Size(314, 302);
-            this.metroTabPage3.TabIndex = 2;
-            this.metroTabPage3.Text = "metroTabPage3";
-            this.metroTabPage3.VerticalScrollbarBarColor = true;
-            this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage3.VerticalScrollbarSize = 10;
-            // 
-            // btnEstado
-            // 
-            this.btnEstado.Location = new System.Drawing.Point(0, 15);
-            this.btnEstado.Name = "btnEstado";
-            this.btnEstado.Size = new System.Drawing.Size(314, 23);
-            this.btnEstado.TabIndex = 2;
-            this.btnEstado.Text = "XxXx";
-            this.btnEstado.UseSelectable = true;
-            this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
+            this.btnCerrar.Location = new System.Drawing.Point(250, 26);
+            this.btnCerrar.Name = "btnCerrar";
+            this.btnCerrar.Size = new System.Drawing.Size(75, 23);
+            this.btnCerrar.TabIndex = 4;
+            this.btnCerrar.Text = "Cerrar ☠️";
+            this.btnCerrar.UseSelectable = true;
+            this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(355, 453);
+            this.ClientSize = new System.Drawing.Size(355, 408);
+            this.Controls.Add(this.btnCerrar);
             this.Controls.Add(this.Resumen);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Resumen.ResumeLayout(false);
             this.metroTabPage1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -321,7 +390,6 @@ namespace VisualV12
         private MetroFramework.Controls.MetroTabControl Resumen;
         private MetroFramework.Controls.MetroTabPage metroTabPage1;
         private MetroFramework.Controls.MetroTabPage metroTabPage2;
-        private MetroFramework.Controls.MetroTabPage metroTabPage3;
         private MetroFramework.Controls.MetroLabel metroLabel3;
         private MetroFramework.Controls.MetroTextBox txtContrasenia;
         private MetroFramework.Controls.MetroLabel metroLabel2;
@@ -333,6 +401,13 @@ namespace VisualV12
         private MetroFramework.Controls.MetroLabel metroLabel4;
         private MetroFramework.Controls.MetroTextBox txtSqlServer;
         private MetroFramework.Controls.MetroButton btnEstado;
+        private MetroFramework.Controls.MetroButton btnCerrar;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private MetroFramework.Controls.MetroLabel txtFechaInicio;
+        private MetroFramework.Controls.MetroLabel lblEstado;
+        private MetroFramework.Controls.MetroLabel lblResumen;
+        private MetroFramework.Controls.MetroLabel lblMailSinEnviar;
     }
 }
 

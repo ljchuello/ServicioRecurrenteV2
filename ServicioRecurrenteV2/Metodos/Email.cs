@@ -9,7 +9,7 @@ namespace ServicioRecurrenteV2.Metodos
         public static void EnviarMail(string uri, Dictionary<string, string> token, string destinatario, string idDocumento)
         {
             var client = new RestClient($"{uri}/DocumentoEmitido/ReenviarCorreo");
-            client.Timeout = -1;
+            client.Timeout = 60000;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
             foreach (var row in token)

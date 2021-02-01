@@ -11,7 +11,7 @@ namespace VisualV12.Libreria
             return Task.Run(() =>
             {
                 RestClient restClient = new RestClient($"{url}DocumentoEmitido/ReenviarCorreo");
-                restClient.Timeout = -1;
+                restClient.Timeout = 60000;
                 RestRequest restRequest = new RestRequest(Method.POST);
                 restRequest.AddHeader("Content-Type", "application/json");
                 restRequest.AddHeader("Referer", $"{url}DocumentoEmitido?fecha_desde=2017/01/01&fecha_hasta=2017/01/01");

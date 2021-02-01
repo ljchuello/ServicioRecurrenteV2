@@ -70,5 +70,62 @@ namespace VisualV12.Libreria
             return source;
         }
 
+        public int Select_Count_NoMail()
+        {
+            int cantidad = 0;
+
+            try
+            {
+                using (OdbcConnection odbcConnection = new OdbcConnection(ConnectionString))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    odbcConnection.Open();
+                    odbcCommand.Connection = odbcConnection;
+                    odbcCommand.CommandText = "SELECT COUNT(db.id) AS 'Cantidad' FROM dbo.DocumentosBase db" +
+                                              "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
+                                              "\ndb.FechaEmision > DATEADD(DAY, -30, GETDATE()) AND EstadoId = 17";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        //source.Add($"{dbReader["id"]}", $"{dbReader["emailCliente"]}");
+                        cantidad = Convert.ToInt32(dbReader["Cantidad"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return cantidad;
+        }
+
+        public Dictionary<string, string> Select_Resumen()
+        {
+            Dictionary<string, string> source = new Dictionary<string, string>();
+
+            try
+            {
+                using (OdbcConnection odbcConnection = new OdbcConnection(ConnectionString))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    odbcConnection.Open();
+                    odbcCommand.Connection = odbcConnection;
+                    odbcCommand.CommandText = "SELECT e.titulo as Tipo, count(d.id) as 'Cantidad' FROM Estados e LEFT JOIN DocumentosBase d ON e.id=d.estadoid GROUP BY e.titulo HAVING COUNT(d.id) > 0 OR e.titulo = 'SIN ENVIAR'";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        source.Add($"{dbReader["Tipo"]}", $"{dbReader["Cantidad"]}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return source;
+        }
+
     }
 }

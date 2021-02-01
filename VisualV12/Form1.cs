@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,8 +22,14 @@ namespace VisualV12
 
         public Form1()
         {
+            CheckForIllegalCrossThreadCalls = false;
+
             InitializeComponent();
             btnEstado_Click(null, null);
+
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ControlBox = false;
 
             configuracion = configuracion.Leer();
             txtUrl.Text = configuracion.Url;
@@ -32,6 +40,9 @@ namespace VisualV12
             Trabajar_Sql();
             Trabajar_Autorizar();
             Trabajar_Correo();
+            Trabajar_Resumen();
+
+            Text = "Servicio Visual V12";
         }
 
         #region Principal
@@ -42,13 +53,21 @@ namespace VisualV12
             {
                 estado = false;
                 btnEstado.Text = "Click para encender";
+                lblEstado.Text = "Estado: Apagado 😢";
             }
             else
             {
+                if (!IsAdministrator())
+                {
+                    MessageBox.Show("Debe ejecutar el programa como administrador\nLa aplicación se cerrará");
+                    btnCerrar_Click(null, null);
+                }
+
                 estado = true;
                 btnEstado.Text = "Click para apagar";
+                lblEstado.Text = "Estado: Encendido 😁";
+                txtFechaInicio.Text = $"Fecha inicio: {DateTime.Now:HH:mm - dd/MM/yyyy}";
             }
-            // Trabajmos
         }
 
         #endregion
@@ -223,6 +242,9 @@ namespace VisualV12
                         // Obtenemos la lista
                         Dictionary<string, string> docs = _odbcSql.Select_Top25_NoMail();
 
+                        // Mails sin enviar
+                        lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
+
                         // hay datos
                         if (docs.Count != 0)
                         {
@@ -232,7 +254,11 @@ namespace VisualV12
                             // Recorremos
                             foreach (var row in docs)
                             {
+                                // Enviamos
                                 await _email.Enviar(txtUrl.Text, row.Key, row.Value, casa.Resultado);
+
+                                // Mails sin enviar
+                                lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
                             }
 
                             Thread.Sleep(5000);
@@ -250,6 +276,46 @@ namespace VisualV12
                     }
                 }
             });
+        }
+
+        async Task Trabajar_Resumen()
+        {
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    try
+                    {
+                        var list = _odbcSql.Select_Resumen();
+                        foreach (var row in list)
+                        {
+                            stringBuilder.AppendLine($"{row.Key}: {Convert.ToInt32(row.Value):n0}");
+                        }
+                        lblResumen.Text = stringBuilder.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    finally
+                    {
+                        Thread.Sleep(2500);
+                    }
+                }
+            });
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(windowsIdentity);
+            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
