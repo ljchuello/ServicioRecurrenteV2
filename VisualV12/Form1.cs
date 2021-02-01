@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,10 +14,9 @@ namespace VisualV12
         private InicioSesion _inicioSesion = new InicioSesion();
         private Configuracion configuracion = new Configuracion();
         private OdbcSql _odbcSql = new OdbcSql();
+        private Email _email = new Email();
 
         private bool estado = true;
-
-        private Task taskSql;
 
         public Form1()
         {
@@ -30,6 +30,8 @@ namespace VisualV12
             txtSqlServer.Text = configuracion.SqlIntancia;
 
             Trabajar_Sql();
+            Trabajar_Autorizar();
+            Trabajar_Correo();
         }
 
         #region Principal
@@ -168,6 +170,82 @@ namespace VisualV12
                     }
                     else
                     {
+                        Thread.Sleep(5000);
+                    }
+                }
+            });
+        }
+
+        async Task Trabajar_Autorizar()
+        {
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (estado)
+                    {
+                        // Obtenemos la lista
+                        List<string> docs = _odbcSql.Select_Top25_NoAutorizado();
+
+                        // hay?
+                        if (docs.Count >= 1)
+                        {
+                            // Obtenemos el token
+                            oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+
+                            // Hacemos la tarea
+                            DocAutorizar docAutorizar = new DocAutorizar();
+                            await docAutorizar.Autorizar(docs, casa.Resultado, txtUrl.Text);
+                        }
+                        else
+                        {
+                            // No hay documentos, esperamos
+                            Thread.Sleep(5000);
+                        }
+                    }
+                    else
+                    {
+                        // Estado apagado esperamos
+                        Thread.Sleep(5000);
+                    }
+                }
+            });
+        }
+
+        async Task Trabajar_Correo()
+        {
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (estado)
+                    {
+                        // Obtenemos la lista
+                        Dictionary<string, string> docs = _odbcSql.Select_Top25_NoMail();
+
+                        // hay datos
+                        if (docs.Count != 0)
+                        {
+                            // Obtenemos el token
+                            oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+
+                            // Recorremos
+                            foreach (var row in docs)
+                            {
+                                await _email.Enviar(txtUrl.Text, row.Key, row.Value, casa.Resultado);
+                            }
+
+                            Thread.Sleep(5000);
+                        }
+                        else
+                        {
+                            // No hay nada pendiente
+                            Thread.Sleep(5000);
+                        }
+                    }
+                    else
+                    {
+                        // Estado apagado esperamos
                         Thread.Sleep(5000);
                     }
                 }

@@ -58,7 +58,6 @@ namespace VisualV12.Libreria
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
             }
 
             return configuracion;

@@ -79,6 +79,8 @@
     </Compile>
     <Compile Include="Libreria\Cadena.cs" />
     <Compile Include="Libreria\Configuracion.cs" />
+    <Compile Include="Libreria\DocAutorizar.cs" />
+    <Compile Include="Libreria\Email.cs" />
     <Compile Include="Libreria\InicioSesion.cs" />
     <Compile Include="Libreria\OdbcSql.cs" />
     <Compile Include="Libreria\oResultado.cs" />

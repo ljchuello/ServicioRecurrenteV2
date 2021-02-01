@@ -35,14 +35,7 @@ namespace VisualV12.Libreria
                     // Como estas?
                     if (servicioSql.Status != ServiceControllerStatus.Running && servicioSql.Status != ServiceControllerStatus.StartPending)
                     {
-                        try
-                        {
-                            servicioSql.Stop();
-                        }
-                        catch (Exception)
-                        {
-
-                        }
+                        try { servicioSql.Stop(); } catch (Exception) { }
                         servicioSql.Start();
                     }
 
@@ -51,7 +44,6 @@ namespace VisualV12.Libreria
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
                 }
             });
         }
