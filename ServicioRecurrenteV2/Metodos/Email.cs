@@ -8,17 +8,23 @@ namespace ServicioRecurrenteV2.Metodos
     {
         public static void EnviarMail(string uri, Dictionary<string, string> token, string destinatario, string idDocumento)
         {
-            var client = new RestClient($"{uri}/DocumentoEmitido/ReenviarCorreo");
-            client.Timeout = 60000;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "application/json");
-            foreach (var row in token)
+            try
             {
-                request.AddParameter(row.Key, row.Value, ParameterType.Cookie);
+                var client = new RestClient($"{uri}/DocumentoEmitido/ReenviarCorreo");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                foreach (var row in token)
+                {
+                    request.AddParameter(row.Key, row.Value, ParameterType.Cookie);
+                }
+                request.AddParameter("application/json", $"{{\"destinatarios\":\"{destinatario}\",\"doc_id\":\"{idDocumento}\"}}", ParameterType.RequestBody);
+                IRestResponse response = client.Execute(request);
             }
-            request.AddParameter("application/json", $"{{\"destinatarios\":\"{destinatario}\",\"doc_id\":\"{idDocumento}\"}}", ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

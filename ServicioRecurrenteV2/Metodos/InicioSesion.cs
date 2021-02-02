@@ -29,7 +29,7 @@ namespace ServicioRecurrenteV2.Metodos
         public void ST1_ObtenerCookies(string url)
         {
             var client = new RestClient($"{url}/Account/Login?ReturnUrl=%2F");
-            client.Timeout = 60000;
+            client.Timeout = -1;
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
 
@@ -45,7 +45,7 @@ namespace ServicioRecurrenteV2.Metodos
         public Dictionary<string, string> ST2_IniciarSesion(string url)
         {
             var client = new RestClient($"{url}/Account/Login?ReturnUrl=%2F");
-            client.Timeout = 60000;
+            client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddParameter("ASP.NET_SessionId", SessionId, ParameterType.Cookie);
             request.AddParameter("__RequestVerificationToken", RequestVerificationTokenCookie, ParameterType.Cookie);
