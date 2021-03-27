@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
 
@@ -7,37 +8,38 @@ namespace VisualV12.Libreria
 {
     public class DocAutorizar
     {
-        public Task Autorizar(List<string> documentos, Dictionary<string, string> token, string url)
+        private readonly OdbcSql _odbcSql = new OdbcSql();
+
+        public Task Autorizar(string idDocument, Dictionary<string, string> token, string url)
+        {
+            return Task.Run(async () =>
+            {
+                // Obtenemos el empresaId
+                int empresaId = _odbcSql.Select_empresaId(idDocument);
+
+                // Cambiamos de empresaId
+                await AutorizarDoc_CambioEmp(url, token, empresaId);
+
+                // Enviamos
+                await AutorizarDoc_Enviar(idDocument, url, token);
+
+                // Recibimos
+                await AutorizarDoc_Recibir(idDocument, url, token);
+            });
+        }
+
+        public Task AutorizarDoc_CambioEmp(string url, Dictionary<string, string> token, int empresaId)
         {
             return Task.Run(() =>
             {
-                List<Task> list = new List<Task>();
-                try
+                RestClient restClient = new RestClient($"{url}EmpresaAdministracion/CambiarEmpresa?empresa_id={empresaId}");
+                restClient.Timeout = 90000;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                foreach (var row in token)
                 {
-                    // Recorremos y añadimos
-                    foreach (var doc in documentos)
-                    {
-                        list.Add(AutorizarDoc_Enviar(doc, url, token));
-                    }
-
-                    // Esperamos
-                    Task.WaitAll(list.ToArray());
-
-                    // Seteamos a 0
-                    list = new List<Task>();
-
-                    // Recorremos y añadimos
-                    foreach (var doc in documentos)
-                    {
-                        list.Add(AutorizarDoc_Recibir(doc, url, token));
-                    }
-
-                    // Esperamos
-                    Task.WaitAll(list.ToArray());
+                    restRequest.AddParameter(row.Key, row.Value, ParameterType.Cookie);
                 }
-                catch (Exception e)
-                {
-                }
+                IRestResponse response = restClient.Execute(restRequest);
             });
         }
 
@@ -45,24 +47,18 @@ namespace VisualV12.Libreria
         {
             return Task.Run(() =>
             {
-                try
+                RestClient restClient = new RestClient($"{url}DocumentoEmitido/Enviar");
+                restClient.Timeout = 90000;
+                var request = new RestRequest(Method.POST);
+                request.AddParameter("fecha_desde", "01/01/2017");
+                request.AddParameter("fecha_hasta", "01/01/2017");
+                request.AddParameter("data_table_length", "10");
+                request.AddParameter("doc_seleccionados", idDoc);
+                foreach (var row in token)
                 {
-                    RestClient restClient = new RestClient($"{url}DocumentoEmitido/Enviar");
-                    restClient.Timeout = -1;
-                    var request = new RestRequest(Method.POST);
-                    request.AddParameter("fecha_desde", "01/01/2017");
-                    request.AddParameter("fecha_hasta", "01/01/2017");
-                    request.AddParameter("data_table_length", "10");
-                    request.AddParameter("doc_seleccionados", idDoc);
-                    foreach (var row in token)
-                    {
-                        request.AddParameter(row.Key, row.Value, ParameterType.Cookie);
-                    }
-                    IRestResponse response = restClient.Execute(request);
+                    request.AddParameter(row.Key, row.Value, ParameterType.Cookie);
                 }
-                catch (Exception ex)
-                {
-                }
+                IRestResponse response = restClient.Execute(request);
             });
         }
 
@@ -70,21 +66,14 @@ namespace VisualV12.Libreria
         {
             return Task.Run(() =>
             {
-                try
+                RestClient restClient = new RestClient($"{url}DocumentoEmitido/ActualizarEstado?id={idDoc}&fecha_desde=2017/01/01&fecha_hasta=2017/01/01");
+                restClient.Timeout = 90000;
+                RestRequest restRequest = new RestRequest(Method.GET);
+                foreach (var row in token)
                 {
-                    RestClient restClient = new RestClient($"{url}DocumentoEmitido/ActualizarEstado?id={idDoc}&fecha_desde=2017/01/01&fecha_hasta=2017/01/01");
-                    restClient.Timeout = -1;
-                    RestRequest restRequest = new RestRequest(Method.GET);
-                    //request.AddHeader("Cookie", "ASP.NET_SessionId=0ilep40draws2bdeg3oa3xa4; __RequestVerificationToken=A8FTPiJs0dfTEkqGYUPsGNwLrzbrhUER3NYOEBk3OBAAXnO3JEot9FU3NhTcRLT6BvDFKcKTNP6OofKIXqKehjZ0XQQtdPyu0GOE-wvriqs1; .AspNet.ApplicationCookie=XBgGTDEP8DkJn8pjwKAIy7Y7nTmezs3vztVKo2RNzbG0wiSc-QDDrDwf3tZhyGytiQjAD-eUYzjb9q4DoLv7fD2ti4WeXT2JTs29wvHBn7w6YnnJ6fUKxtgLttgfKbQbb9VR3gqigXHRbbB3CcrPQIBoVp0Nmts3OaVholcCZ7-WpVSjhFfEW2yD4CY2nkRRmz_Vq8w4qQWafUu4v0fy0-PB6FPLlqH7Sb1UGfB_3etZZM3xrQj-zRq6Yu_kM_dZzJFEOzIdPAN9FL6qpYIHTvVq0aprPjZh-8Z4Hu76NbnNe0H66vvLOKL1vywl-ey0QscPRSTLaf8aIEhCWMe0ked9bNUYRaRqBDD56ulUXqr-J6SDC4ADFpNEeeLiPXpU-Tfm_5a4-2smK3z1v0YJoeNOIArGJqRZZs1qphInAKuyCaKzU78LyGvVVijnU2qqvjTL-nbljMrfkAk3aEp9OfcmYqvrCiFiqDzcwIRTY1av9Dc_85H_XXWYE9U1QHNz8GdqSugZZznjZIB2Gfci2w");
-                    foreach (var row in token)
-                    {
-                        restRequest.AddParameter(row.Key, row.Value, ParameterType.Cookie);
-                    }
-                    IRestResponse response = restClient.Execute(restRequest);
+                    restRequest.AddParameter(row.Key, row.Value, ParameterType.Cookie);
                 }
-                catch (Exception ex)
-                {
-                }
+                IRestResponse response = restClient.Execute(restRequest);
             });
         }
     }

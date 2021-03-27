@@ -34,7 +34,6 @@ namespace VisualV12
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblResumen = new MetroFramework.Controls.MetroLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblMailSinEnviar = new MetroFramework.Controls.MetroLabel();
             this.txtFechaInicio = new MetroFramework.Controls.MetroLabel();
             this.lblEstado = new MetroFramework.Controls.MetroLabel();
             this.btnEstado = new MetroFramework.Controls.MetroButton();
@@ -50,6 +49,8 @@ namespace VisualV12
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
             this.btnCerrar = new MetroFramework.Controls.MetroButton();
+            this.lblVersion = new MetroFramework.Controls.MetroLabel();
+            this.lblMailSinEnviar = new MetroFramework.Controls.MetroLabel();
             this.Resumen.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -116,15 +117,6 @@ namespace VisualV12
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Servicio";
-            // 
-            // lblMailSinEnviar
-            // 
-            this.lblMailSinEnviar.AutoSize = true;
-            this.lblMailSinEnviar.Location = new System.Drawing.Point(9, 84);
-            this.lblMailSinEnviar.Name = "lblMailSinEnviar";
-            this.lblMailSinEnviar.Size = new System.Drawing.Size(108, 19);
-            this.lblMailSinEnviar.TabIndex = 6;
-            this.lblMailSinEnviar.Text = "Emails sin enviar:";
             // 
             // txtFechaInicio
             // 
@@ -364,11 +356,30 @@ namespace VisualV12
             this.btnCerrar.UseSelectable = true;
             this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(247, 54);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(65, 19);
+            this.lblVersion.TabIndex = 7;
+            this.lblVersion.Text = "lblVersion";
+            // 
+            // lblMailSinEnviar
+            // 
+            this.lblMailSinEnviar.AutoSize = true;
+            this.lblMailSinEnviar.Location = new System.Drawing.Point(9, 84);
+            this.lblMailSinEnviar.Name = "lblMailSinEnviar";
+            this.lblMailSinEnviar.Size = new System.Drawing.Size(136, 19);
+            this.lblMailSinEnviar.TabIndex = 6;
+            this.lblMailSinEnviar.Text = "Emails sin enviar: N/D";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(355, 408);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnCerrar);
             this.Controls.Add(this.Resumen);
             this.Name = "Form1";
@@ -382,6 +393,7 @@ namespace VisualV12
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -407,6 +419,7 @@ namespace VisualV12
         private MetroFramework.Controls.MetroLabel txtFechaInicio;
         private MetroFramework.Controls.MetroLabel lblEstado;
         private MetroFramework.Controls.MetroLabel lblResumen;
+        private MetroFramework.Controls.MetroLabel lblVersion;
         private MetroFramework.Controls.MetroLabel lblMailSinEnviar;
     }
 }

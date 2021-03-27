@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
@@ -20,6 +21,19 @@ namespace VisualV12.Libreria
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public int Count()
+        {
+            try
+            {
+                int cantidad = Process.GetProcessesByName("VisualV12").Count();
+                return cantidad;
+            }
+            catch (Exception)
+            {
+                return 100;
             }
         }
 

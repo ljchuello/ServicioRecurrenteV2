@@ -11,6 +11,33 @@ namespace VisualV12.Libreria
         //private readonly OdbcCommand _dbCommand;
         private const string ConnectionString = "DSN=odbc_sqlfac;Uid=sa;Pwd=Sermatick3000;";
 
+        public int Select_empresaId(string idDoc)
+        {
+            int empresaId = 0;
+
+            try
+            {
+                using (OdbcConnection sqlConnection = new OdbcConnection(ConnectionString))
+                {
+                    OdbcCommand odbcCommand = new OdbcCommand();
+                    sqlConnection.Open();
+                    odbcCommand.Connection = sqlConnection;
+                    odbcCommand.CommandText = $"SELECT TOP 1 db.empresaId FROM dbo.DocumentosBase db WHERE db.id = '{idDoc}';";
+                    OdbcDataReader dbReader = odbcCommand.ExecuteReader();
+                    while (dbReader.Read())
+                    {
+                        empresaId = Convert.ToInt32(dbReader["empresaId"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return empresaId;
+        }
+
         public List<string> Select_Top25_NoAutorizado()
         {
             List<string> source = new List<string>();
@@ -52,8 +79,10 @@ namespace VisualV12.Libreria
                     odbcConnection.Open();
                     odbcCommand.Connection = odbcConnection;
                     odbcCommand.CommandText = "SELECT db.id, db.emailCliente FROM dbo.DocumentosBase db" +
-                                              "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
-                                              "\ndb.FechaEmision > DATEADD(DAY, -30, GETDATE()) AND EstadoId = 17" +
+                                              "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND-- Los que no se le han enviado email" +
+                                              "\nEstadoId = 17 AND-- que esten autorizados" +
+                                              "\ndb.fechaEmision > DATEADD(DAY, -30, GETDATE()) AND-- Que la fecha de emision tenga una antiguedad maxima de 30 dias" +
+                                              "\nDATEADD(MINUTE, +15, db.fechaAutorizacion) < GETDATE()-- Que la fecha de autorizacion(+15 min) sea menor a datenow()" +
                                               "\nORDER BY db.fechaEmision DESC";
                     OdbcDataReader dbReader = odbcCommand.ExecuteReader();
                     while (dbReader.Read())
@@ -82,8 +111,10 @@ namespace VisualV12.Libreria
                     odbcConnection.Open();
                     odbcCommand.Connection = odbcConnection;
                     odbcCommand.CommandText = "SELECT COUNT(db.id) AS 'Cantidad' FROM dbo.DocumentosBase db" +
-                                              "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND" +
-                                              "\ndb.FechaEmision > DATEADD(DAY, -30, GETDATE()) AND EstadoId = 17";
+                                              "\nWHERE id NOT IN(SELECT he.docBaseId FROM dbo.HistorialesEmail he) AND-- Los que no se le han enviado email" +
+                                              "\nEstadoId = 17 AND-- que esten autorizados" +
+                                              "\ndb.fechaEmision > DATEADD(DAY, -30, GETDATE()) AND-- Que la fecha de emision tenga una antiguedad maxima de 30 dias" +
+                                              "\nDATEADD(MINUTE, +15, db.fechaAutorizacion) < GETDATE()-- Que la fecha de autorizacion(+15 min) sea menor a datenow()";
                     OdbcDataReader dbReader = odbcCommand.ExecuteReader();
                     while (dbReader.Read())
                     {

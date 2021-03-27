@@ -39,10 +39,11 @@ namespace VisualV12
 
             Trabajar_Sql();
             Trabajar_Autorizar();
-            Trabajar_Correo();
+            //Trabajar_Correo();
             Trabajar_Resumen();
 
             Text = "Servicio Visual V12";
+            lblVersion.Text = "V2021.03.02.1";
         }
 
         #region Principal
@@ -61,6 +62,13 @@ namespace VisualV12
                 {
                     MessageBox.Show("Debe ejecutar el programa como administrador\nLa aplicación se cerrará");
                     btnCerrar_Click(null, null);
+                }
+
+                // Cantidad
+                if (servicios.Count() > 1)
+                {
+                    MessageBox.Show("El programa se cerrará, sólo se puede tener una instancia abierta.");
+                    Close();
                 }
 
                 estado = true;
@@ -201,30 +209,43 @@ namespace VisualV12
             {
                 while (true)
                 {
-                    if (estado)
+                    try
                     {
-                        // Obtenemos la lista
-                        List<string> docs = _odbcSql.Select_Top25_NoAutorizado();
-
-                        // hay?
-                        if (docs.Count >= 1)
+                        if (estado)
                         {
-                            // Obtenemos el token
-                            oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+                            // Obtenemos la lista
+                            List<string> docs = _odbcSql.Select_Top25_NoAutorizado();
 
-                            // Hacemos la tarea
-                            DocAutorizar docAutorizar = new DocAutorizar();
-                            await docAutorizar.Autorizar(docs, casa.Resultado, txtUrl.Text);
+                            // hay?
+                            if (docs.Count >= 1)
+                            {
+                                // Obtenemos el token
+                                oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+
+                                // Hacemos la tarea
+                                DocAutorizar docAutorizar = new DocAutorizar();
+
+                                // Recorremos
+                                foreach (var row in docs)
+                                {
+                                    await docAutorizar.Autorizar(row, casa.Resultado, txtUrl.Text);
+                                }
+                            }
+                            else
+                            {
+                                // No hay documentos, esperamos
+                                Thread.Sleep(5000);
+                            }
                         }
                         else
                         {
-                            // No hay documentos, esperamos
+                            // Estado apagado esperamos
                             Thread.Sleep(5000);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        // Estado apagado esperamos
+                        Configuracion.GuardarLog(ex);
                         Thread.Sleep(5000);
                     }
                 }
@@ -237,41 +258,55 @@ namespace VisualV12
             {
                 while (true)
                 {
-                    if (estado)
+                    try
                     {
-                        // Obtenemos la lista
-                        Dictionary<string, string> docs = _odbcSql.Select_Top25_NoMail();
-
-                        // Mails sin enviar
-                        lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
-
-                        // hay datos
-                        if (docs.Count != 0)
+                        if (estado)
                         {
-                            // Obtenemos el token
-                            oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
+                            // Obtenemos la lista
+                            Dictionary<string, string> docs = _odbcSql.Select_Top25_NoMail();
 
-                            // Recorremos
-                            foreach (var row in docs)
+                            // Mails sin enviar
+                            lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
+
+                            // hay datos
+                            if (docs.Count != 0)
                             {
-                                // Enviamos
-                                await _email.Enviar(txtUrl.Text, row.Key, row.Value, casa.Resultado);
+                                // Obtenemos el token
+                                oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
 
-                                // Mails sin enviar
-                                lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
+                                // Recorremos
+                                foreach (var row in docs)
+                                {
+                                    // Obtenemos la empresaId
+                                    int empresaId = _odbcSql.Select_empresaId(row.Key);
+
+                                    // Cambiamos de empresa
+                                    await new DocAutorizar().AutorizarDoc_CambioEmp(txtUrl.Text, casa.Resultado, empresaId);
+
+                                    // Enviamos
+                                    await _email.Enviar(txtUrl.Text, row.Key, row.Value, casa.Resultado);
+
+                                    // Mails sin enviar
+                                    lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
+                                }
+
+                                Thread.Sleep(5000);
                             }
-
-                            Thread.Sleep(5000);
+                            else
+                            {
+                                // No hay nada pendiente
+                                Thread.Sleep(5000);
+                            }
                         }
                         else
                         {
-                            // No hay nada pendiente
+                            // Estado apagado esperamos
                             Thread.Sleep(5000);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        // Estado apagado esperamos
+                        Configuracion.GuardarLog(ex);
                         Thread.Sleep(5000);
                     }
                 }
@@ -280,7 +315,7 @@ namespace VisualV12
 
         async Task Trabajar_Resumen()
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 while (true)
                 {

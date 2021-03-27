@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -11,7 +12,7 @@ namespace VisualV12.Libreria
         public string Contrasenia { set; get; } = "123456";
         public string SqlIntancia { set; get; } = "MSSQL$SQLEXPRESS";
 
-        public string ruta = @"C:\Sermatick\";
+        public static string ruta = @"C:\Sermatick\";
 
         public bool Guardar(Configuracion configuracion)
         {
@@ -28,6 +29,38 @@ namespace VisualV12.Libreria
                 return true;
             }
             catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool GuardarLog(Exception ex)
+        {
+            try
+            {
+                // Validamos si existe la ruta
+                if (!Directory.Exists(ruta))
+                {
+                    Directory.CreateDirectory(ruta);
+                }
+
+                // Leemos
+                string file = $"C:\\Sermatick\\{DateTime.Now:yyyy-MM-dd}.json";
+                List<Exception> listException = new List<Exception>();
+                if (File.Exists(file))
+                {
+                    string text = File.ReadAllText(file);
+                    listException = JsonConvert.DeserializeObject<List<Exception>>(text) ?? new List<Exception>();
+                }
+
+                // Añadimos
+                listException.Add(ex);
+
+                // Guardamos el archivos
+                File.WriteAllText(file, JsonConvert.SerializeObject(listException, Formatting.Indented));
+                return true;
+            }
+            catch (Exception)
             {
                 return false;
             }
