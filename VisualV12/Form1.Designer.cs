@@ -34,6 +34,7 @@ namespace VisualV12
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblResumen = new MetroFramework.Controls.MetroLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblMailSinEnviar = new MetroFramework.Controls.MetroLabel();
             this.txtFechaInicio = new MetroFramework.Controls.MetroLabel();
             this.lblEstado = new MetroFramework.Controls.MetroLabel();
             this.btnEstado = new MetroFramework.Controls.MetroButton();
@@ -50,21 +51,24 @@ namespace VisualV12
             this.txtUrl = new MetroFramework.Controls.MetroTextBox();
             this.btnCerrar = new MetroFramework.Controls.MetroButton();
             this.lblVersion = new MetroFramework.Controls.MetroLabel();
-            this.lblMailSinEnviar = new MetroFramework.Controls.MetroLabel();
+            this.metroTabPage3 = new MetroFramework.Controls.MetroTabPage();
+            this.btnReenviarEmails = new System.Windows.Forms.Button();
             this.Resumen.SuspendLayout();
             this.metroTabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
+            this.metroTabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // Resumen
             // 
             this.Resumen.Controls.Add(this.metroTabPage1);
             this.Resumen.Controls.Add(this.metroTabPage2);
+            this.Resumen.Controls.Add(this.metroTabPage3);
             this.Resumen.Location = new System.Drawing.Point(10, 64);
             this.Resumen.Name = "Resumen";
-            this.Resumen.SelectedIndex = 0;
+            this.Resumen.SelectedIndex = 2;
             this.Resumen.Size = new System.Drawing.Size(322, 344);
             this.Resumen.TabIndex = 0;
             this.Resumen.UseSelectable = true;
@@ -117,6 +121,15 @@ namespace VisualV12
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Servicio";
+            // 
+            // lblMailSinEnviar
+            // 
+            this.lblMailSinEnviar.AutoSize = true;
+            this.lblMailSinEnviar.Location = new System.Drawing.Point(9, 84);
+            this.lblMailSinEnviar.Name = "lblMailSinEnviar";
+            this.lblMailSinEnviar.Size = new System.Drawing.Size(136, 19);
+            this.lblMailSinEnviar.TabIndex = 6;
+            this.lblMailSinEnviar.Text = "Emails sin enviar: N/D";
             // 
             // txtFechaInicio
             // 
@@ -365,14 +378,30 @@ namespace VisualV12
             this.lblVersion.TabIndex = 7;
             this.lblVersion.Text = "lblVersion";
             // 
-            // lblMailSinEnviar
+            // metroTabPage3
             // 
-            this.lblMailSinEnviar.AutoSize = true;
-            this.lblMailSinEnviar.Location = new System.Drawing.Point(9, 84);
-            this.lblMailSinEnviar.Name = "lblMailSinEnviar";
-            this.lblMailSinEnviar.Size = new System.Drawing.Size(136, 19);
-            this.lblMailSinEnviar.TabIndex = 6;
-            this.lblMailSinEnviar.Text = "Emails sin enviar: N/D";
+            this.metroTabPage3.Controls.Add(this.btnReenviarEmails);
+            this.metroTabPage3.HorizontalScrollbarBarColor = true;
+            this.metroTabPage3.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage3.HorizontalScrollbarSize = 10;
+            this.metroTabPage3.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage3.Name = "metroTabPage3";
+            this.metroTabPage3.Size = new System.Drawing.Size(314, 302);
+            this.metroTabPage3.TabIndex = 2;
+            this.metroTabPage3.Text = "Reenvio de emails";
+            this.metroTabPage3.VerticalScrollbarBarColor = true;
+            this.metroTabPage3.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage3.VerticalScrollbarSize = 10;
+            // 
+            // btnReenviarEmails
+            // 
+            this.btnReenviarEmails.Location = new System.Drawing.Point(10, 14);
+            this.btnReenviarEmails.Name = "btnReenviarEmails";
+            this.btnReenviarEmails.Size = new System.Drawing.Size(288, 23);
+            this.btnReenviarEmails.TabIndex = 2;
+            this.btnReenviarEmails.Text = "Reenviar Emails";
+            this.btnReenviarEmails.UseVisualStyleBackColor = true;
+            this.btnReenviarEmails.Click += new System.EventHandler(this.btnReenviarEmails_Click);
             // 
             // Form1
             // 
@@ -392,6 +421,7 @@ namespace VisualV12
             this.groupBox1.PerformLayout();
             this.metroTabPage2.ResumeLayout(false);
             this.metroTabPage2.PerformLayout();
+            this.metroTabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -421,6 +451,8 @@ namespace VisualV12
         private MetroFramework.Controls.MetroLabel lblResumen;
         private MetroFramework.Controls.MetroLabel lblVersion;
         private MetroFramework.Controls.MetroLabel lblMailSinEnviar;
+        private MetroFramework.Controls.MetroTabPage metroTabPage3;
+        private System.Windows.Forms.Button btnReenviarEmails;
     }
 }
 

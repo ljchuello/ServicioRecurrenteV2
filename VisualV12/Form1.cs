@@ -39,7 +39,7 @@ namespace VisualV12
 
             Trabajar_Sql();
             Trabajar_Autorizar();
-            //Trabajar_Correo();
+            Trabajar_Correo();
             Trabajar_Resumen();
 
             Text = "Servicio Visual V12";
@@ -260,54 +260,13 @@ namespace VisualV12
                 {
                     try
                     {
-                        if (estado)
-                        {
-                            // Obtenemos la lista
-                            Dictionary<string, string> docs = _odbcSql.Select_Top25_NoMail();
-
-                            // Mails sin enviar
-                            lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
-
-                            // hay datos
-                            if (docs.Count != 0)
-                            {
-                                // Obtenemos el token
-                                oResultado casa = _inicioSesion.GetToken(txtUrl.Text, txtUsuario.Text, txtContrasenia.Text);
-
-                                // Recorremos
-                                foreach (var row in docs)
-                                {
-                                    // Obtenemos la empresaId
-                                    int empresaId = _odbcSql.Select_empresaId(row.Key);
-
-                                    // Cambiamos de empresa
-                                    await new DocAutorizar().AutorizarDoc_CambioEmp(txtUrl.Text, casa.Resultado, empresaId);
-
-                                    // Enviamos
-                                    await _email.Enviar(txtUrl.Text, row.Key, row.Value, casa.Resultado);
-
-                                    // Mails sin enviar
-                                    lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
-                                }
-
-                                Thread.Sleep(5000);
-                            }
-                            else
-                            {
-                                // No hay nada pendiente
-                                Thread.Sleep(5000);
-                            }
-                        }
-                        else
-                        {
-                            // Estado apagado esperamos
-                            Thread.Sleep(5000);
-                        }
+                        // Mails sin enviar
+                        lblMailSinEnviar.Text = $"Emails sin enviar: {_odbcSql.Select_Count_NoMail()}";
                     }
                     catch (Exception ex)
                     {
                         Configuracion.GuardarLog(ex);
-                        Thread.Sleep(5000);
+                        //Thread.Sleep(5000);
                     }
                 }
             });
@@ -351,6 +310,11 @@ namespace VisualV12
             WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(windowsIdentity);
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void btnReenviarEmails_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
